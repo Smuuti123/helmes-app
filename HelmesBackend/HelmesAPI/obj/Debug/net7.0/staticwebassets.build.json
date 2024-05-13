@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "XxZV+FmCatlrh+EUQmKNaH5qrqhQZdeTv6yauDErJg8=",
+  "Source": "HelmesAPI",
+  "BasePath": "_content/HelmesAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
