@@ -5,6 +5,7 @@ using HelmesAPI.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Text.RegularExpressions;
+using System.Net.Http.Headers;
 
 namespace HelmesAPI.Controllers;
 
@@ -35,11 +36,32 @@ public class ParcelController : ControllerBase
         {
             return BadRequest("Parcel with the same parcel number already exists");
         }
+        //Adding max lenght for the name
+        if(parcel.RecipientName.Length > 100)
+        {
+            return BadRequest("Name cannot be more than 100 characters");
+        }
         //Destination can only be 2-letters code, e.g. “EE”, “LV”, “FI”
         if(parcel.DestinationCountry.Length != 2 || !Regex.IsMatch(parcel.DestinationCountry, @"^[A-Z]{2}$"))
         {
             return BadRequest("Destination can only type in, using 2 letters code, e.g. (EE, LV, FI)");
         }
+        //Both of values cannot be negative
+        if(parcel.Price < 0 || parcel.Weight < 0)
+        {
+            return BadRequest("Either price or weight cannot be negative");
+        }
+        //Weight max 3 decimals allowed after comma
+        if((decimal)(Math.Round(parcel.Weight * 1000) / 1000) != parcel.Weight)
+        {
+            return BadRequest("");
+        }
+        //Price max 2 decimals allowed after comma
+        if((decimal)(Math.Round(parcel.Price * 100) / 100) != parcel.Price)
+        {
+            return BadRequest("");
+        }
+
     
         _context.Parcels.Add(parcel);
          try
