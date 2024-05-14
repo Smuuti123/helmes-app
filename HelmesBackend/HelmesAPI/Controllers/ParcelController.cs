@@ -33,9 +33,13 @@ public class ParcelController : ControllerBase
         //Parcels have to be unique
         if( await _context.Parcels.AnyAsync(p => p.ParcelNumber == parcel.ParcelNumber))
         {
-            return BadRequest("Parcle with the same parcel number already exists");
+            return BadRequest("Parcel with the same parcel number already exists");
         }
- 
+        //Destination can only be 2-letters code, e.g. “EE”, “LV”, “FI”
+        if(parcel.DestinationCountry.Length != 2 || !Regex.IsMatch(parcel.DestinationCountry, @"^[A-Z]{2}$"))
+        {
+            return BadRequest("Destination can only type in, using 2 letters code, e.g. (EE, LV, FI)");
+        }
     
         _context.Parcels.Add(parcel);
          try
@@ -50,7 +54,7 @@ public class ParcelController : ControllerBase
         
         return CreatedAtAction(nameof(GetParcel), new {parcel.Id}, parcel);
     }
-
+    //Find parcels, using id
     [HttpGet("{id}")]
     public async Task<ActionResult<Parcel>> GetParcel(int id)
     {
