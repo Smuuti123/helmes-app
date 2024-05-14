@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using HelmesAPI.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Text.RegularExpressions;
 
 namespace HelmesAPI.Controllers;
 
@@ -24,9 +25,29 @@ public class ParcelController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-
+        //Setting up the format
+        if(!Regex.IsMatch(parcel.ParcelNumber, @"^[A-Za-z]{2}\d{6}[A-Za-z]{2}$"))
+        {
+            return BadRequest("Parcel number must be in format “LLNNNNNNLL”, where L is letter, N is digit");
+        }
+        //Parcels have to be unique
+        if( await _context.Parcels.AnyAsync(p => p.ParcelNumber == parcel.ParcelNumber))
+        {
+            return BadRequest("Parcle with the same parcel number already exists");
+        }
+ 
+    
         _context.Parcels.Add(parcel);
-        await _context.SaveChangesAsync();
+         try
+         {
+            await _context.SaveChangesAsync();
+         }
+         catch (DbUpdateException)
+         {
+            return StatusCode(500, "Error occured while saving the parcel");
+         }
+        
+        
         return CreatedAtAction(nameof(GetParcel), new {parcel.Id}, parcel);
     }
 
