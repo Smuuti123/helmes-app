@@ -15,5 +15,8 @@ namespace HelmesAPI.Data
 
         }
         public DbSet<Parcel> Parcels { get; set; }
+        public DbSet<Shipment> Shipments { get; set; }
+        public DbSet<BagWithParcels> BagWithParcels { get; set; }
+        public DbSet<BagWithLetters> bagWithLetters{ get; set; }
     }
 }
