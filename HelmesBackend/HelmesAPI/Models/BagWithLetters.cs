@@ -7,9 +7,10 @@ namespace HelmesAPI.Models
 {
     public class BagWithLetters
     {
-        public string? bagNumber { get; set; } //Vaata docsi
-        public int countOfLetters { get; set; } //Cant be zero
-        public decimal weight { get; set; } //Max 3 decimals allowed after comma
-        public decimal price { get; set; } //Max 2 decimals allowed after comma
+        public int Id { get; set; }
+        public string? BagNumber { get; set; } //Vaata docsi
+        public int CountOfLetters { get; set; } //Cant be zero
+        public decimal Weight { get; set; } //Max 3 decimals allowed after comma
+        public decimal Price { get; set; } //Max 2 decimals allowed after comma
     }
 }

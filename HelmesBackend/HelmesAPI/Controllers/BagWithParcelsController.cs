@@ -1,12 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using HelmesAPI.Data;
+using Microsoft.AspNetCore.Mvc;
+using HelmesAPI.Models;
 
-namespace HelmesAPI.Controllers
+namespace HelmesAPI.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class BagWithParcelsController : ControllerBase
 {
-    public class BagWithParcelsController
+    private readonly AppDbContext _context;
+
+    public BagWithParcelsController(AppDbContext context)
     {
-        
+        _context = context;
     }
 }
