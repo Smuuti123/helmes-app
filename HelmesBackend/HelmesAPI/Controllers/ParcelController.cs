@@ -19,22 +19,12 @@ public class ParcelController : ControllerBase
         _context = context;
     }
 
-    [HttpPost] //Adding parcel
-    public async Task<IActionResult> CreateParcel(Parcel parcel)
+    private IActionResult ValidateParcel(Parcel parcel)
     {
-        if(!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        //Setting up the format
+         //Setting up the format
         if(!Regex.IsMatch(parcel.ParcelNumber, @"^[A-Za-z]{2}\d{6}[A-Za-z]{2}$"))
         {
             return BadRequest("Parcel number must be in format “LLNNNNNNLL”, where L is letter, N is digit");
-        }
-        //Parcels have to be unique
-        if( await _context.Parcels.AnyAsync(p => p.ParcelNumber == parcel.ParcelNumber))
-        {
-            return BadRequest("Parcel with the same parcel number already exists");
         }
         //Adding max lenght for the name
         if(parcel.RecipientName.Length > 100)
@@ -54,15 +44,35 @@ public class ParcelController : ControllerBase
         //Weight max 3 decimals allowed after comma
         if((decimal)(Math.Round(parcel.Weight * 1000) / 1000) != parcel.Weight)
         {
-            return BadRequest("");
+            return BadRequest("Weight max 3 decimals allowed after comma");
         }
         //Price max 2 decimals allowed after comma
         if((decimal)(Math.Round(parcel.Price * 100) / 100) != parcel.Price)
         {
-            return BadRequest("");
+            return BadRequest("Price max 2 decimals allowed after comma");
+        }
+        return null;
+    }
+
+    [HttpPost] //Adding parcel
+    public async Task<IActionResult> CreateParcel(Parcel parcel)
+    {
+        if(!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
         }
 
-    
+        IActionResult validationResult = ValidateParcel(parcel);
+        if(validationResult != null)
+        {
+            return validationResult;
+        }
+        //Checking if there is a paricel with the same Parcel number
+        if(await _context.Parcels.AnyAsync(p => p.ParcelNumber == parcel.ParcelNumber))
+        {
+            return BadRequest("Parcel with the same parcel number already exists");
+        }
+
         _context.Parcels.Add(parcel);
          try
          {
@@ -76,6 +86,7 @@ public class ParcelController : ControllerBase
         
         return CreatedAtAction(nameof(GetParcel), new {parcel.Id}, parcel);
     }
+
     //Find parcels, using id
     [HttpGet("{id}")]
     public async Task<ActionResult<Parcel>> GetParcel(int id)
@@ -88,5 +99,73 @@ public class ParcelController : ControllerBase
         }
         
         return parcel;
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateParcel(int id, Parcel updatedParcel)
+    {
+        if(!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        IActionResult validationResult = ValidateParcel(updatedParcel);
+        if(validationResult != null)
+        {
+            return validationResult;
+        }
+
+        var parcel = await _context.Parcels.FindAsync(id);
+        if(parcel == null)
+        {
+            return NotFound();
+        }
+        
+        //Updating the values
+        parcel.ParcelNumber = updatedParcel.ParcelNumber;
+        parcel.RecipientName = updatedParcel.RecipientName;
+        parcel.DestinationCountry = updatedParcel.DestinationCountry;
+        parcel.Weight = updatedParcel.Weight;
+        parcel.Price = updatedParcel.Price;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if(!_context.Parcels.Any(p => p.Id == id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteParcel(int id)
+    {
+        var parcel = await _context.Parcels.FindAsync(id);
+
+        if(parcel == null)
+        {
+            return NotFound();
+        }
+
+        _context.Parcels.Remove(parcel);
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch(DbUpdateException)
+        {
+            return BadRequest("Error while deleting parcel");
+        }
+
+        return NoContent();
     }
 }
