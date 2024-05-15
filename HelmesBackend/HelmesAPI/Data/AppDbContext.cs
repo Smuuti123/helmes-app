@@ -25,9 +25,9 @@ namespace HelmesAPI.Data
             base.OnModelCreating(builder);
 
             builder.Entity<Parcel>().HasIndex(p => p.ParcelNumber);
-            builder.Entity<Shipment>().HasIndex(s => s.ShipmentNumber).IsUnique();
-            builder.Entity<BagWithLetters>().HasKey(i => i.Id);
-            builder.Entity<BagWithParcels>().HasKey(i => i.Id);
+            builder.Entity<Shipment>().HasIndex(s => s.ShipmentNumber);
+            builder.Entity<BagWithLetters>().HasIndex(b => b.BagNumber);
+            builder.Entity<BagWithParcels>().HasIndex(b => b.BagNumber);
             
         }
     }
