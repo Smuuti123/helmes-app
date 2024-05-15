@@ -19,10 +19,6 @@ public class BagWithParcelsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateBagWithParcels(BagWithParcels bag)
     {
-        if(!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
         if(await _context.BagWithParcels.AnyAsync(b => b.BagNumber == bag.BagNumber))
         {
             return BadRequest("Bag number must be unique");
@@ -45,16 +41,23 @@ public class BagWithParcelsController : ControllerBase
             return StatusCode(500, "A database error occurred: " + ex.Message);
         }
     }
+    
+    [HttpPost("{bagId}/Parcel/{parcelId}")]
+    private async Task<IActionResult> AddParcel()
+    {
+
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<BagWithParcels>> GetBagWithParcels(int id)
     {
-        var bagOfParcels = await _context.Parcels.FindAsync(id);
+        var bagOfParcels = await _context.BagWithParcels.FindAsync(id);
 
         if(bagOfParcels == null)
         {
             return NotFound();
         }
         
-        return Ok(bagOfParcels);
+        return bagOfParcels;
     }
 }
