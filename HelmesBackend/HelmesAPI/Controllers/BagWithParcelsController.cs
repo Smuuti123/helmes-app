@@ -126,7 +126,7 @@ public class BagWithParcelsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<BagWithParcels>> GetBagWithParcels(int id)
     {
-        var bagOfParcels = await _context.BagWithParcels.FindAsync(id);
+        var bagOfParcels = await _context.BagWithParcels.Include(b => b.ListOfParcels).FirstOrDefaultAsync(b => b.Id == id);
 
         if(bagOfParcels == null)
         {
