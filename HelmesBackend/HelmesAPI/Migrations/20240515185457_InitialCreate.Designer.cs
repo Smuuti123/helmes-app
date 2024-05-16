@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HelmesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240514195913_InitialCreate")]
+    [Migration("20240515185457_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace HelmesAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HelmesAPI.Models.BagWithLetters", b =>
+            modelBuilder.Entity("HelmesAPI.Models.Bag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,36 +34,28 @@ namespace HelmesAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BagNumber")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BagType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CountOfLetters")
+                    b.Property<int?>("ShipmentId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("BagWithLetters");
-                });
+                    b.HasIndex("BagNumber")
+                        .IsUnique()
+                        .HasFilter("[BagNumber] IS NOT NULL");
 
-            modelBuilder.Entity("HelmesAPI.Models.BagWithParcels", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasIndex("ShipmentId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.ToTable("Bag");
 
-                    b.Property<string>("BagNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasDiscriminator<string>("BagType").HasValue("Bag");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("BagWithParcels");
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("HelmesAPI.Models.Parcel", b =>
@@ -89,9 +81,6 @@ namespace HelmesAPI.Migrations
                     b.Property<string>("RecipientName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ShipmentId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(18,2)");
 
@@ -102,8 +91,6 @@ namespace HelmesAPI.Migrations
                     b.HasIndex("ParcelNumber")
                         .IsUnique()
                         .HasFilter("[ParcelNumber] IS NOT NULL");
-
-                    b.HasIndex("ShipmentId");
 
                     b.ToTable("Parcels");
                 });
@@ -116,22 +103,59 @@ namespace HelmesAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FlightDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("KnownAirport")
+                    b.Property<int>("Airport")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("FlightDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FlightNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ShipmentNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ShipmentNumber")
-                        .IsUnique()
-                        .HasFilter("[ShipmentNumber] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Shipments");
+                });
+
+            modelBuilder.Entity("HelmesAPI.Models.BagWithLetters", b =>
+                {
+                    b.HasBaseType("HelmesAPI.Models.Bag");
+
+                    b.Property<int>("CountOfLetters")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasDiscriminator().HasValue("Letters");
+                });
+
+            modelBuilder.Entity("HelmesAPI.Models.BagWithParcels", b =>
+                {
+                    b.HasBaseType("HelmesAPI.Models.Bag");
+
+                    b.HasDiscriminator().HasValue("Parcels");
+                });
+
+            modelBuilder.Entity("HelmesAPI.Models.Bag", b =>
+                {
+                    b.HasOne("HelmesAPI.Models.Shipment", null)
+                        .WithMany("Bags")
+                        .HasForeignKey("ShipmentId");
                 });
 
             modelBuilder.Entity("HelmesAPI.Models.Parcel", b =>
@@ -139,18 +163,14 @@ namespace HelmesAPI.Migrations
                     b.HasOne("HelmesAPI.Models.BagWithParcels", null)
                         .WithMany("ListOfParcels")
                         .HasForeignKey("BagWithParcelsId");
-
-                    b.HasOne("HelmesAPI.Models.Shipment", null)
-                        .WithMany("ListOfParcels")
-                        .HasForeignKey("ShipmentId");
-                });
-
-            modelBuilder.Entity("HelmesAPI.Models.BagWithParcels", b =>
-                {
-                    b.Navigation("ListOfParcels");
                 });
 
             modelBuilder.Entity("HelmesAPI.Models.Shipment", b =>
+                {
+                    b.Navigation("Bags");
+                });
+
+            modelBuilder.Entity("HelmesAPI.Models.BagWithParcels", b =>
                 {
                     b.Navigation("ListOfParcels");
                 });

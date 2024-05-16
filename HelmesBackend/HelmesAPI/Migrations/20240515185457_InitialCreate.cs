@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,47 +12,43 @@ namespace HelmesAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "BagWithLetters",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BagNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CountOfLetters = table.Column<int>(type: "int", nullable: false),
-                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BagWithLetters", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BagWithParcels",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BagNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BagWithParcels", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Shipments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ShipmentNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    KnownAirport = table.Column<int>(type: "int", nullable: false),
-                    FlightDate = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ShipmentNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Airport = table.Column<int>(type: "int", nullable: false),
+                    FlightNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FlightDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shipments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bag",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BagNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    BagType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShipmentId = table.Column<int>(type: "int", nullable: true),
+                    CountOfLetters = table.Column<int>(type: "int", nullable: true),
+                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bag", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bag_Shipments_ShipmentId",
+                        column: x => x.ShipmentId,
+                        principalTable: "Shipments",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -65,23 +62,29 @@ namespace HelmesAPI.Migrations
                     DestinationCountry = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    BagWithParcelsId = table.Column<int>(type: "int", nullable: true),
-                    ShipmentId = table.Column<int>(type: "int", nullable: true)
+                    BagWithParcelsId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Parcels", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Parcels_BagWithParcels_BagWithParcelsId",
+                        name: "FK_Parcels_Bag_BagWithParcelsId",
                         column: x => x.BagWithParcelsId,
-                        principalTable: "BagWithParcels",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Parcels_Shipments_ShipmentId",
-                        column: x => x.ShipmentId,
-                        principalTable: "Shipments",
+                        principalTable: "Bag",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bag_BagNumber",
+                table: "Bag",
+                column: "BagNumber",
+                unique: true,
+                filter: "[BagNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bag_ShipmentId",
+                table: "Bag",
+                column: "ShipmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parcels_BagWithParcelsId",
@@ -96,29 +99,20 @@ namespace HelmesAPI.Migrations
                 filter: "[ParcelNumber] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parcels_ShipmentId",
-                table: "Parcels",
-                column: "ShipmentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Shipments_ShipmentNumber",
                 table: "Shipments",
                 column: "ShipmentNumber",
-                unique: true,
-                filter: "[ShipmentNumber] IS NOT NULL");
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BagWithLetters");
-
-            migrationBuilder.DropTable(
                 name: "Parcels");
 
             migrationBuilder.DropTable(
-                name: "BagWithParcels");
+                name: "Bag");
 
             migrationBuilder.DropTable(
                 name: "Shipments");

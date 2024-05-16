@@ -24,19 +24,19 @@ public class ShipmentsController : ControllerBase
         return CreatedAtAction(nameof(GetShipment), new { id = shipment.Id}, shipment);
     }
 
-    [HttpPost("{shipmentId}/AddBag/{bagId}")]
-    public async Task<IActionResult> AddBag()
-    {
-     // validate that bag is not in the other shipment that is already finalized
-     // validate that shipment is not finalized   
-    }
+    // [HttpPost("{shipmentId}/AddBag/{bagId}")]
+    // public async Task<IActionResult> AddBag()
+    // {
+    //  // validate that bag is not in the other shipment that is already finalized
+    //  // validate that shipment is not finalized   
+    // }
 
-    [HttpPost("{id}/Finalize")]
-    public async Task<IActionResult> FinalizeShipment()
-    {
-        // validate that bags are not in the other shipment that is already finalized
-        // validate that bas are not empty
-    }
+    // [HttpPost("{id}/Finalize")]
+    // public async Task<IActionResult> FinalizeShipment()
+    // {
+    //     // validate that bags are not in the other shipment that is already finalized
+    //     // validate that bas are not emp
+    // }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Shipment>> GetShipment(int id)

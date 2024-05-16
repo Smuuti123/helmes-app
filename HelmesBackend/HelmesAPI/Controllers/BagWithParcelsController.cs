@@ -41,12 +41,12 @@ public class BagWithParcelsController : ControllerBase
             return StatusCode(500, "A database error occurred: " + ex.Message);
         }
     }
-    
-    [HttpPost("{bagId}/Parcel/{parcelId}")]
-    private async Task<IActionResult> AddParcel()
-    {
 
-    }
+    // [HttpPost("{bagId}/Parcel/{parcelId}")]
+    // private async Task<IActionResult> AddParcel()
+    // {
+
+    // }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<BagWithParcels>> GetBagWithParcels(int id)
