@@ -62,7 +62,7 @@ namespace HelmesAPI.Migrations
                     DestinationCountry = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    BagWithParcelsId = table.Column<int>(type: "int", nullable: false)
+                    BagWithParcelsId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

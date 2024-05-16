@@ -59,7 +59,7 @@ namespace HelmesAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BagWithParcelsId")
+                    b.Property<int?>("BagWithParcelsId")
                         .HasColumnType("int");
 
                     b.Property<string>("DestinationCountry")
@@ -161,13 +161,10 @@ namespace HelmesAPI.Migrations
 
             modelBuilder.Entity("HelmesAPI.Models.Parcel", b =>
                 {
-                    b.HasOne("HelmesAPI.Models.BagWithParcels", "BagWithParcels")
+                    b.HasOne("HelmesAPI.Models.BagWithParcels", null)
                         .WithMany("ListOfParcels")
                         .HasForeignKey("BagWithParcelsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BagWithParcels");
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("HelmesAPI.Models.Shipment", b =>

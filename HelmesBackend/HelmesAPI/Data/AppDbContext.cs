@@ -30,7 +30,7 @@ namespace HelmesAPI.Data
             builder.Entity<BagWithLetters>().HasIndex(b => b.BagNumber).IsUnique();
             builder.Entity<BagWithParcels>().HasIndex(b => b.BagNumber).IsUnique();
 
-            builder.Entity<BagWithParcels>().HasMany(b => b.ListOfParcels).WithOne(p => p.BagWithParcels).HasForeignKey(p => p.BagWithParcelsId).OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<BagWithParcels>().HasMany(b => b.ListOfParcels).WithOne().OnDelete(DeleteBehavior.Cascade);
             
             
         }
