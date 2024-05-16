@@ -1,4 +1,5 @@
 namespace HelmesAPI.Models
+
 {
     public class BagWithParcels : Bag
     {

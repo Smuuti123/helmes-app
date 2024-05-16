@@ -2,6 +2,7 @@ using HelmesAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using HelmesAPI.Models;
 using HelmesAPI.Protocol;
+using Microsoft.EntityFrameworkCore;
 
 namespace HelmesAPI.Controllers;
 
@@ -24,19 +25,38 @@ public class ShipmentsController : ControllerBase
         return CreatedAtAction(nameof(GetShipment), new { id = shipment.Id}, shipment);
     }
 
-    // [HttpPost("{shipmentId}/AddBag/{bagId}")]
-    // public async Task<IActionResult> AddBag()
-    // {
-    //  // validate that bag is not in the other shipment that is already finalized
-    //  // validate that shipment is not finalized   
-    // }
+    [HttpPost("{id}/finalize")]
+    public async Task<IActionResult> FinalizeShipment(int id)
+    {
+        var shipment = await _context.Shipments.Include(s => s.Bags).FirstOrDefaultAsync(s => s.Id == id);
 
-    // [HttpPost("{id}/Finalize")]
-    // public async Task<IActionResult> FinalizeShipment()
-    // {
-    //     // validate that bags are not in the other shipment that is already finalized
-    //     // validate that bas are not emp
-    // }
+        if(shipment == null)
+        {
+            return NotFound();
+        }
+
+        if(shipment.Status == Status.FINALIZED)
+        {
+            return BadRequest("Already finalized");
+        }
+
+        foreach(var bag in shipment.Bags)
+        {
+            if(bag is BagWithParcels parcelBag && !parcelBag.ListOfParcels.Any())
+            {
+                return BadRequest("Parcel bag has to contain one pracel");
+            }
+            else if(bag is BagWithLetters letterBag && letterBag.CountOfLetters < 1)
+            {
+                return BadRequest("Letter bag must contain one letter");
+            }
+        }
+
+        shipment.Status = Status.FINALIZED;
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Shipment>> GetShipment(int id)
