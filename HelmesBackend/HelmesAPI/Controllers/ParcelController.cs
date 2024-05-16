@@ -99,4 +99,71 @@ public class ParcelController : ControllerBase
         return parcel;
     }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateParcel(int id, Parcel updatedParcel)
+    {
+
+
+
+        var parcel = await _context.Parcels.FindAsync(id);
+        if(parcel == null)
+        {
+            return NotFound();
+        }
+
+        if(parcel.ParcelNumber != updatedParcel.ParcelNumber)
+         {
+            var maybeParcel = await _context.Parcels.Where(parcel => parcel.ParcelNumber == updatedParcel.ParcelNumber).FirstOrDefaultAsync();
+            if(maybeParcel != null) {
+                return BadRequest();
+            }
+        }
+        
+        //Updating the values
+        parcel.ParcelNumber = updatedParcel.ParcelNumber;
+        parcel.RecipientName = updatedParcel.RecipientName;
+        parcel.DestinationCountry = updatedParcel.DestinationCountry;
+        parcel.Weight = updatedParcel.Weight;
+        parcel.Price = updatedParcel.Price;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if(!_context.Parcels.Any(p => p.Id == id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteParcel(int id)
+    {
+        var parcel = await _context.Parcels.FindAsync(id);
+
+        if(parcel == null)
+        {
+            return NotFound();
+        }
+
+        _context.Parcels.Remove(parcel);
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch(DbUpdateException)
+        {
+            return BadRequest("Error while deleting parcel");
+        }
+
+        return NoContent();
+    }
 }

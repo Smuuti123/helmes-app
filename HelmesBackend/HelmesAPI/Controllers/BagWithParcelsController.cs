@@ -122,7 +122,7 @@ public class BagWithParcelsController : ControllerBase
         //Both of values cannot be negative
         if(parcel.Price < 0 || parcel.Weight < 0)
         {
-            return BadRequest("Price or weight cannot be negative");
+            return BadRequest("Either price or weight cannot be negative");
         }
         //Weight max 3 decimals allowed after comma
         if((decimal)(Math.Round(parcel.Weight * 1000) / 1000) != parcel.Weight)

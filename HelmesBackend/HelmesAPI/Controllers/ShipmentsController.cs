@@ -28,6 +28,7 @@ public class ShipmentsController : ControllerBase
         {
             return BadRequest("Shipment number must be unique.");
         }
+
         if (!Enum.IsDefined(typeof(Airport), shipment.KnownAirport))
         {
             return BadRequest("Invalid airport. Possible values are 'TLL', 'RIX', 'HEL'.");
