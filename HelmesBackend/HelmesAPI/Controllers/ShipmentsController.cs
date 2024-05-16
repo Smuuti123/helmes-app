@@ -20,11 +20,11 @@ public class ShipmentsController : ControllerBase
     
     private IActionResult ValidateShipment(CreateShipmentRequest shipment)
     {
-        if (!Regex.IsMatch(shipment.ShipmentNumber, @"^[A-Za-z0-9]{3}-[A-Za-z0-9]{6}$"))
+        if(!Regex.IsMatch(shipment.ShipmentNumber, @"^[A-Za-z0-9]{3}-[A-Za-z0-9]{6}$"))
         {
             return BadRequest("Shipment number must be in format 'XXX-XXXXXX', where X is a letter or digit.");
         }
-        if (_context.Shipments.Any(s => s.ShipmentNumber == shipment.ShipmentNumber))
+        if(_context.Shipments.Any(s => s.ShipmentNumber == shipment.ShipmentNumber))
         {
             return BadRequest("Shipment number must be unique.");
         }

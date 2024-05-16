@@ -21,7 +21,7 @@ public class BagWithLettersController : ControllerBase
 
     private IActionResult ValidateLetter(CreateBagWithLettersRequest letter)
     {
-        if(!Regex.IsMatch(letter.BagNumber, @"^[A-Za-z0-9]{15}$"))
+        if(!Regex.IsMatch(letter.BagNumber, @"^[A-Za-z0-9]{1,15}$"))
         {
             return BadRequest("Bag Number can only be 15 characters (No special symbols)");
         }
@@ -45,23 +45,34 @@ public class BagWithLettersController : ControllerBase
         }
         return null;
     }
+
     [HttpPost("{shipmentId}")]
-    public async Task<IActionResult> CreateBagWithLetters(int shipmentId, BagWithLetters bag)
+    public async Task<IActionResult> CreateBagWithLetters([FromRoute] int shipmentId, [FromBody] CreateBagWithLettersRequest createBagWithLettersRequest)
     {
+        IActionResult validationResult = ValidateLetter(createBagWithLettersRequest);
+        
+        if (validationResult != null)
+        {
+            return validationResult;
+        }
+
         var shipment = await _context.Shipments.FindAsync(shipmentId);
         if(shipment == null || shipment.Status == Status.FINALIZED)
         {
             return BadRequest("ALREADY FINALIZED");
         }
 
-        if(await _context.BagWithLetters.AnyAsync(b => b.BagNumber == bag.BagNumber))
+        if(await _context.BagWithLetters.AnyAsync(b => b.BagNumber == createBagWithLettersRequest.BagNumber))
         {
             return BadRequest("Bag number Must be unique");
         }
-        if(bag.CountOfLetters < 0)
+        BagWithLetters bag = new()
         {
-            return BadRequest("Bag cannot be empty");
-        }
+            BagNumber = createBagWithLettersRequest.BagNumber,
+            CountOfLetters = createBagWithLettersRequest.CountOfLetters,
+            Weight = createBagWithLettersRequest.Weight,
+            Price = createBagWithLettersRequest.Price
+        };
 
         shipment.Bags.Add(bag);
         _context.BagWithLetters.Add(bag);
