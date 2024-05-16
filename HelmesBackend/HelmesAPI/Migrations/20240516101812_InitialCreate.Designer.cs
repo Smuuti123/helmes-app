@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HelmesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240516101605_AddConfiguratedMigration")]
-    partial class AddConfiguratedMigration
+    [Migration("20240516101812_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,7 +47,7 @@ namespace HelmesAPI.Migrations
 
                     b.HasIndex("ShipmentId");
 
-                    b.ToTable("Bag");
+                    b.ToTable("Bags");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Bag");
 
@@ -62,7 +62,7 @@ namespace HelmesAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BagWithParcelsId")
+                    b.Property<int>("BagWithParcelsId")
                         .HasColumnType("int");
 
                     b.Property<string>("DestinationCountry")
@@ -164,10 +164,13 @@ namespace HelmesAPI.Migrations
 
             modelBuilder.Entity("HelmesAPI.Models.Parcel", b =>
                 {
-                    b.HasOne("HelmesAPI.Models.BagWithParcels", null)
+                    b.HasOne("HelmesAPI.Models.BagWithParcels", "BagWithParcels")
                         .WithMany("ListOfParcels")
                         .HasForeignKey("BagWithParcelsId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BagWithParcels");
                 });
 
             modelBuilder.Entity("HelmesAPI.Models.Shipment", b =>

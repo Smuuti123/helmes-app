@@ -29,13 +29,13 @@ namespace HelmesAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bag",
+                name: "Bags",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BagNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    BagType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShipmentId = table.Column<int>(type: "int", nullable: true),
                     CountOfLetters = table.Column<int>(type: "int", nullable: true),
                     Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
@@ -43,9 +43,9 @@ namespace HelmesAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bag", x => x.Id);
+                    table.PrimaryKey("PK_Bags", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bag_Shipments_ShipmentId",
+                        name: "FK_Bags_Shipments_ShipmentId",
                         column: x => x.ShipmentId,
                         principalTable: "Shipments",
                         principalColumn: "Id");
@@ -62,28 +62,29 @@ namespace HelmesAPI.Migrations
                     DestinationCountry = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    BagWithParcelsId = table.Column<int>(type: "int", nullable: true)
+                    BagWithParcelsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Parcels", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Parcels_Bag_BagWithParcelsId",
+                        name: "FK_Parcels_Bags_BagWithParcelsId",
                         column: x => x.BagWithParcelsId,
-                        principalTable: "Bag",
-                        principalColumn: "Id");
+                        principalTable: "Bags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bag_BagNumber",
-                table: "Bag",
+                name: "IX_Bags_BagNumber",
+                table: "Bags",
                 column: "BagNumber",
                 unique: true,
                 filter: "[BagNumber] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bag_ShipmentId",
-                table: "Bag",
+                name: "IX_Bags_ShipmentId",
+                table: "Bags",
                 column: "ShipmentId");
 
             migrationBuilder.CreateIndex(
@@ -112,7 +113,7 @@ namespace HelmesAPI.Migrations
                 name: "Parcels");
 
             migrationBuilder.DropTable(
-                name: "Bag");
+                name: "Bags");
 
             migrationBuilder.DropTable(
                 name: "Shipments");
