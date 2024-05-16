@@ -23,16 +23,15 @@ namespace HelmesAPI.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
+            
 
             builder.Entity<Parcel>().HasIndex(p => p.ParcelNumber).IsUnique();
             builder.Entity<Shipment>().HasIndex(s => s.ShipmentNumber).IsUnique();
             builder.Entity<BagWithLetters>().HasIndex(b => b.BagNumber).IsUnique();
             builder.Entity<BagWithParcels>().HasIndex(b => b.BagNumber).IsUnique();
 
-            builder.Entity<BagWithParcels>().HasMany(b => b.ListOfParcels).WithOne().OnDelete(DeleteBehavior.Cascade);
-            
-            
+            base.OnModelCreating(builder);
+        
         }
     }
 }

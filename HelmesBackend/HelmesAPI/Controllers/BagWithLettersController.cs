@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using HelmesAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using HelmesAPI.Protocol;
+using System.Text.RegularExpressions;
 
 namespace HelmesAPI.Controllers;
 
@@ -15,6 +17,33 @@ public class BagWithLettersController : ControllerBase
     public BagWithLettersController(AppDbContext context)
     {
         _context = context;
+    }
+
+    private IActionResult ValidateLetter(CreateBagWithLettersRequest letter)
+    {
+        if(!Regex.IsMatch(letter.BagNumber, @"^[A-Za-z0-9]{15}$"))
+        {
+            return BadRequest("Bag Number can only be 15 characters (No special symbols)");
+        }
+        if(letter.CountOfLetters < 1)
+        {
+            return BadRequest("Count of letters cant be zero");
+        }
+        if(letter.Price < 0 || letter.Weight < 0)
+        {
+            return BadRequest("Either price or weight cannot be negative");
+        }
+        //Weight max 3 decimals allowed after comma
+        if((decimal)(Math.Round(letter.Weight * 1000) / 1000) != letter.Weight)
+        {
+            return BadRequest("Weight max 3 decimals allowed after comma");
+        }
+        //Price max 2 decimals allowed after comma
+        if((decimal)(Math.Round(letter.Price * 100) / 100) != letter.Price)
+        {
+            return BadRequest("Price max 2 decimals allowed after comma");
+        }
+        return null;
     }
     [HttpPost("{shipmentId}")]
     public async Task<IActionResult> CreateBagWithLetters(int shipmentId, BagWithLetters bag)

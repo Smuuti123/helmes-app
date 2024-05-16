@@ -19,11 +19,11 @@ namespace HelmesAPI.Models
         [SetsRequiredMembers]
         public Shipment(CreateShipmentRequest CreateShipmentRequest) 
         {
-            this.ShipmentNumber = CreateShipmentRequest.ShipmentNumber;
-            this.Airport = CreateShipmentRequest.KnownAirport;
-            this.FlightDate = CreateShipmentRequest.FlightDate;
-            this.FlightNumber = CreateShipmentRequest.FlightNumber;
-            this.Status = Status.CREATED;
+            ShipmentNumber = CreateShipmentRequest.ShipmentNumber;
+            Airport = CreateShipmentRequest.KnownAirport;
+            FlightDate = CreateShipmentRequest.FlightDate;
+            FlightNumber = CreateShipmentRequest.FlightNumber;
+            Status = Status.CREATED;
         }
         
     }

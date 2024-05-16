@@ -163,8 +163,7 @@ namespace HelmesAPI.Migrations
                 {
                     b.HasOne("HelmesAPI.Models.BagWithParcels", null)
                         .WithMany("ListOfParcels")
-                        .HasForeignKey("BagWithParcelsId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BagWithParcelsId");
                 });
 
             modelBuilder.Entity("HelmesAPI.Models.Shipment", b =>

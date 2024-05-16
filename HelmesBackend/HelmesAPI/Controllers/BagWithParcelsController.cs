@@ -21,40 +21,6 @@ public class BagWithParcelsController : ControllerBase
         _context = context;
     }
 
-    private IActionResult ValidateParcel(CreateParcelRequest parcel)
-    {
-         //Setting up the format
-        if(!Regex.IsMatch(parcel.ParcelNumber, @"^[A-Za-z]{2}\d{6}[A-Za-z]{2}$"))
-        {
-            return BadRequest("Parcel number must be in format “LLNNNNNNLL”, where L is letter, N is digit");
-        }
-        //Adding max lenght for the name
-        if(parcel.RecipientName.Length > 100)
-        {
-            return BadRequest("Name cannot be more than 100 characters");
-        }
-        //Destination can only be 2-letters code, e.g. “EE”, “LV”, “FI”
-        if(parcel.DestinationCountry.Length != 2 || !Regex.IsMatch(parcel.DestinationCountry, @"^[A-Z]{2}$"))
-        {
-            return BadRequest("Destination can only type in, using 2 letters code, e.g. (EE, LV, FI)");
-        }
-        //Both of values cannot be negative
-        if(parcel.Price < 0 || parcel.Weight < 0)
-        {
-            return BadRequest("Either price or weight cannot be negative");
-        }
-        //Weight max 3 decimals allowed after comma
-        if((decimal)(Math.Round(parcel.Weight * 1000) / 1000) != parcel.Weight)
-        {
-            return BadRequest("Weight max 3 decimals allowed after comma");
-        }
-        //Price max 2 decimals allowed after comma
-        if((decimal)(Math.Round(parcel.Price * 100) / 100) != parcel.Price)
-        {
-            return BadRequest("Price max 2 decimals allowed after comma");
-        }
-        return null;
-    }
     [HttpPost("{shipmentId}")]
     public async Task<IActionResult> CreateBagWithParcels(BagWithParcels bag, int shipmentId)
     {
@@ -82,20 +48,20 @@ public class BagWithParcelsController : ControllerBase
         }
     }
 
-    [HttpPost("{shipmentId}/bags/{bagId}/addParcel")]
-    public async Task<IActionResult> AddParcelToBag(int shipmentId, int bagId, CreateParcelRequest createParcelRequest)
+    [HttpPost("bags/{bagId}/addParcel")]
+    public async Task<IActionResult> AddParcelToBag(int bagId, CreateParcelRequest createParcelRequest)
     {
-        var shipment = await _context.Shipments.Include(b => b.Bags).ThenInclude(b =>(b as BagWithParcels).ListOfParcels).FirstOrDefaultAsync(s => s.Id == shipmentId);
+        var bag = await _context.BagWithParcels.Include(b => b.ListOfParcels).FirstOrDefaultAsync(b => b.Id == bagId);
 
-        if(shipment == null || shipment.Status == Status.FINALIZED)
+        if(bag ==  null)
         {
-            return BadRequest("ALREADY FINALIZED");
+            return NotFound("Bag not found");
         }
 
-        var bag = shipment.Bags.OfType<BagWithParcels>().FirstOrDefault( b => b.Id == bagId);
-        if(bag == null)
+        var shipment = await _context.Shipments.Include(s => s.Bags).FirstOrDefaultAsync(s => s.Bags.Any(b => b.Id == bagId));
+        if(shipment == null || shipment.Status == Status.FINALIZED)
         {
-            return NotFound();
+            return BadRequest("Shipment is already finalized");
         }
 
         IActionResult validationResult = ValidateParcel(createParcelRequest);
@@ -134,5 +100,40 @@ public class BagWithParcelsController : ControllerBase
         }
         
         return bagOfParcels;
+    }
+
+    private IActionResult ValidateParcel(CreateParcelRequest parcel)
+    {
+         //Setting up the format
+        if(!Regex.IsMatch(parcel.ParcelNumber, @"^[A-Za-z]{2}\d{6}[A-Za-z]{2}$"))
+        {
+            return BadRequest("Parcel number must be in format “LLNNNNNNLL”, where L is letter, N is digit");
+        }
+        //Adding max lenght for the name
+        if(parcel.RecipientName.Length > 100)
+        {
+            return BadRequest("Name cannot be more than 100 characters");
+        }
+        //Destination can only be 2-letters code, e.g. “EE”, “LV”, “FI”
+        if(parcel.DestinationCountry.Length != 2 || !Regex.IsMatch(parcel.DestinationCountry, @"^[A-Z]{2}$"))
+        {
+            return BadRequest("Destination can only type in, using 2 letters code, e.g. (EE, LV, FI)");
+        }
+        //Both of values cannot be negative
+        if(parcel.Price < 0 || parcel.Weight < 0)
+        {
+            return BadRequest("Price or weight cannot be negative");
+        }
+        //Weight max 3 decimals allowed after comma
+        if((decimal)(Math.Round(parcel.Weight * 1000) / 1000) != parcel.Weight)
+        {
+            return BadRequest("Weight max 3 decimals allowed after comma");
+        }
+        //Price max 2 decimals allowed after comma
+        if((decimal)(Math.Round(parcel.Price * 100) / 100) != parcel.Price)
+        {
+            return BadRequest("Price max 2 decimals allowed after comma");
+        }
+        return null;
     }
 }

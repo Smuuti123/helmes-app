@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HelmesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240516104350_InitialCreate")]
+    [Migration("20240516105411_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -166,8 +166,7 @@ namespace HelmesAPI.Migrations
                 {
                     b.HasOne("HelmesAPI.Models.BagWithParcels", null)
                         .WithMany("ListOfParcels")
-                        .HasForeignKey("BagWithParcelsId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BagWithParcelsId");
                 });
 
             modelBuilder.Entity("HelmesAPI.Models.Shipment", b =>

@@ -71,8 +71,7 @@ namespace HelmesAPI.Migrations
                         name: "FK_Parcels_Bags_BagWithParcelsId",
                         column: x => x.BagWithParcelsId,
                         principalTable: "Bags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
