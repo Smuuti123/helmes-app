@@ -35,6 +35,29 @@ public class BagWithParcelsController : ControllerBase
             return BadRequest("Bag number must be unique");
         }
 
+        foreach(var parcel in bag.ListOfParcels)
+        {
+            var createParcelRequest = new CreateParcelRequest
+            {
+                ParcelNumber = parcel.ParcelNumber,
+                RecipientName = parcel.RecipientName,
+                DestinationCountry = parcel.DestinationCountry,
+                Weight = parcel.Weight,
+                Price = parcel.Price,
+            };
+
+            IActionResult validationResult = ValidateParcel(createParcelRequest);
+            if(validationResult != null)
+            {
+                return validationResult;
+            }
+
+            if(await _context.Parcels.AnyAsync(parcel => parcel.ParcelNumber == createParcelRequest.ParcelNumber))
+            {
+                return BadRequest("Parcel with number this number already exists");
+            }
+        }
+
         shipment.Bags.Add(bag);
 
         try
