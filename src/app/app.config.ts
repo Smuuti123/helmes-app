@@ -1,9 +1,18 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
-import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { ShipmentsListComponent } from './shipments-list/shipments-list.component';
+import { ShipmentDetailsComponent } from './shipment-details/shipment-details.component';
+import { BagDetailsComponent } from './bag-details/bag-details.component';
 
-export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideClientHydration()]
-};
+@NgModule({
+  declarations: [AppComponent, ShipmentsListComponent, ShipmentDetailsComponent, BagDetailsComponent],
+  imports: [ BrowserModule, HttpClientModule, RouterModule],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+
+export class AppModule {}
