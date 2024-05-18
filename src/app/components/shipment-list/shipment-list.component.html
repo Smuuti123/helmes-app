@@ -1,0 +1,16 @@
+<div *ngIf="shipments.length > 0; else noShipments">
+  <div *ngFor="let shipment of shipments">
+    <h3>{{ shipment.shipmentNumber }}</h3>
+    <p>Flight Number: {{ shipment.flightNumber }}</p>
+    <p>Flight Date: {{ shipment.flightDate }}</p>
+    <p>Status: {{ shipment.status }}</p>
+    <ul>
+      <li *ngFor="let bag of shipment.bags">
+        Bag Number: {{ bag.bagNumber }}
+      </li>
+    </ul>
+  </div>
+</div>
+<ng-template #noShipments>
+  <p>No shipments available.</p>
+</ng-template>

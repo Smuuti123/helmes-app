@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace HelmesAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ShipmentsController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -59,7 +59,7 @@ public class ShipmentsController : ControllerBase
         return CreatedAtAction(nameof(GetShipment), new { id = shipment.Id}, shipment);
     }
 
-    [HttpPost("{id}/finalize")]
+    [HttpPost("{id}/Finalize")]
     public async Task<IActionResult> FinalizeShipment(int id)
     {
         var shipment = await _context.Shipments.Include(s => s.Bags).ThenInclude(b => (b as BagWithParcels).ListOfParcels).FirstOrDefaultAsync(s => s.Id == id);
@@ -103,5 +103,11 @@ public class ShipmentsController : ControllerBase
         }
         
         return shipment;
+    }
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Shipment>>> GetShipments()
+    {
+        var shipments = await _context.Shipments.Include(s => s.Bags).ThenInclude(b => (b as BagWithParcels).ListOfParcels).ToListAsync();
+        return Ok(shipments);
     }
 }

@@ -4,15 +4,23 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { ShipmentsListComponent } from './shipments-list/shipments-list.component';
-import { ShipmentDetailsComponent } from './shipment-details/shipment-details.component';
-import { BagDetailsComponent } from './bag-details/bag-details.component';
+import { ShipmentListComponent } from './components/shipment-list/shipment-list.component';
+import { ShipmentDetailComponent } from './components/shipment-detail/shipment-detail.component';
+import { AppRoutingModule } from './app.routes';
 
 @NgModule({
-  declarations: [AppComponent, ShipmentsListComponent, ShipmentDetailsComponent, BagDetailsComponent],
-  imports: [ BrowserModule, HttpClientModule, RouterModule],
+  declarations: [
+    ShipmentListComponent,
+    ShipmentDetailComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule,
+    AppComponent,  // Import standalone component here
+    RouterModule.forRoot([])  // Ensure this is correct
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
-
-export class AppModule {}
+export class AppModule { }

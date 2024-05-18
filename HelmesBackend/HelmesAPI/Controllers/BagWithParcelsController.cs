@@ -6,12 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using HelmesAPI.Protocol;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 
 namespace HelmesAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class BagWithParcelsController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -21,8 +22,8 @@ public class BagWithParcelsController : ControllerBase
         _context = context;
     }
 
-    [HttpPost("{shipmentId}")]
-    public async Task<IActionResult> CreateBagWithParcels(BagWithParcels bag, int shipmentId)
+    [HttpPost("Shipment/{shipmentId}")]
+    public async Task<IActionResult> CreateBagWithParcels(CreateBagWithParcelsRequest request, int shipmentId)
     {
         var shipment = await _context.Shipments.FindAsync(shipmentId);
         if(shipment == null || shipment.Status == Status.FINALIZED)
@@ -30,34 +31,13 @@ public class BagWithParcelsController : ControllerBase
             return BadRequest("ALREADY FINALIZED");
         }
 
-        if(await _context.BagWithParcels.AnyAsync(b => b.BagNumber == bag.BagNumber))
+        if(await _context.BagWithParcels.AnyAsync(b => b.BagNumber == request.BagNumber))
         {
             return BadRequest("Bag number must be unique");
         }
 
-        foreach(var parcel in bag.ListOfParcels)
-        {
-            var createParcelRequest = new CreateParcelRequest
-            {
-                ParcelNumber = parcel.ParcelNumber,
-                RecipientName = parcel.RecipientName,
-                DestinationCountry = parcel.DestinationCountry,
-                Weight = parcel.Weight,
-                Price = parcel.Price,
-            };
 
-            IActionResult validationResult = ValidateParcel(createParcelRequest);
-            if(validationResult != null)
-            {
-                return validationResult;
-            }
-
-            if(await _context.Parcels.AnyAsync(parcel => parcel.ParcelNumber == createParcelRequest.ParcelNumber))
-            {
-                return BadRequest("Parcel with number this number already exists");
-            }
-        }
-
+        BagWithParcels bag = new(request);
         shipment.Bags.Add(bag);
 
         try
@@ -71,7 +51,7 @@ public class BagWithParcelsController : ControllerBase
         }
     }
 
-    [HttpPost("bags/{bagId}/addParcel")]
+    [HttpPost("{bagId}/AddParcel")]
     public async Task<IActionResult> AddParcelToBag(int bagId, CreateParcelRequest createParcelRequest)
     {
         var bag = await _context.BagWithParcels.Include(b => b.ListOfParcels).FirstOrDefaultAsync(b => b.Id == bagId);

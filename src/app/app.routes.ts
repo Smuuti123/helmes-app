@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ShipmentsListComponent } from './shipments-list/shipments-list.component';
-import { ShipmentDetailsComponent } from './shipment-details/shipment-details.component';
-import { BagDetailsComponent } from './bag-details/bag-details.component';
+import { ShipmentListComponent } from './components/shipment-list/shipment-list.component';
+import { ShipmentDetailComponent } from './components/shipment-detail/shipment-detail.component';
 
+const routes: Routes = [
+  { path: 'shipments', component: ShipmentListComponent },
+  { path: 'shipment/:id', component: ShipmentDetailComponent },
+  { path: '', redirectTo: '/shipments', pathMatch: 'full' }  // Default route to shipments
+];
 
-
-const routes: Routes = [{path: '', component: ShipmentsListComponent}, {path: 'shipment/:id', component: ShipmentDetailsComponent}, {path: 'bag/:id', component: BagDetailsComponent}];
-
-
-@NgModule({imports: [RouterModule.forRoot(routes)], exports: [RouterModule]})
-
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
 export class AppRoutingModule {}

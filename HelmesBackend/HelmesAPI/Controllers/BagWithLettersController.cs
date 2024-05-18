@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 namespace HelmesAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class BagWithLettersController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -46,7 +46,7 @@ public class BagWithLettersController : ControllerBase
         return null;
     }
 
-    [HttpPost("{shipmentId}")]
+    [HttpPost("Shipment/{shipmentId}")]
     public async Task<IActionResult> CreateBagWithLetters([FromRoute] int shipmentId, [FromBody] CreateBagWithLettersRequest createBagWithLettersRequest)
     {
         IActionResult validationResult = ValidateLetter(createBagWithLettersRequest);
