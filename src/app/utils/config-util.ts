@@ -1,5 +1,3 @@
-import { ApplicationConfig } from '@angular/core';
-
 interface ApiUrlProvider {
     provide: string;
     useValue: string;

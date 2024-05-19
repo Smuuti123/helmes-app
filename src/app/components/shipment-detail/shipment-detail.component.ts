@@ -40,22 +40,22 @@ export class ShipmentDetailComponent implements OnInit {
 
   getBagType(bag: Bag): string {
     if (this.isBagWithLetters(bag)) {
-      return 'Bag with letters';
+      return 'Bag contains letters';
     } 
-    return 'Bag with parcels';
+    return 'Bag contains parcels';
   }
 
   getTotalAmount(bag: Bag): number {
     if (this.isBagWithLetters(bag)) {
       return bag.countOfLetters;
     } else this.isBagWithParcels(bag) 
-      return bag.listOfParcels.length;
+    return bag.listOfParcels.length;
   }
 
   getTotalPrice(bag: Bag): number {
     if (this.isBagWithLetters(bag)) {
       return bag.price;
     } else(this.isBagWithParcels(bag))
-      return bag.listOfParcels.reduce((total: any, parcel: { price: any; }) => total + parcel.price, 0);
+    return bag.listOfParcels.reduce((total: any, parcel: { price: any; }) => total + parcel.price, 0);
   }
 }

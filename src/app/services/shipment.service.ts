@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Shipment, Bag, BagWithLetters, BagWithParcels } from '../models/shipment.model';
+import { Shipment, BagWithLetters, BagWithParcels } from '../models/shipment.model';
 import { config } from '../app.config.server';
 import { getApiUrl } from '../utils/config-util';
 

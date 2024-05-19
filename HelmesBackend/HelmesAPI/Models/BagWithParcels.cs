@@ -5,7 +5,7 @@ namespace HelmesAPI.Models
 {
     public class BagWithParcels : Bag
     {
-        public List<Parcel> ListOfParcels{ get; set; } //List cannot be empty by the moment of dinalizing shipment
+        public List<Parcel> ListOfParcels{ get; set; }
 
         public BagWithParcels() {
             ListOfParcels = new List<Parcel>();
