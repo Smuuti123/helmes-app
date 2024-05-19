@@ -6,7 +6,7 @@ import { ShipmentDetailComponent } from './components/shipment-detail/shipment-d
 const routes: Routes = [
   { path: 'shipments', component: ShipmentListComponent },
   { path: 'shipment/:id', component: ShipmentDetailComponent },
-  { path: '', redirectTo: '/shipments', pathMatch: 'full' }  // Default route to shipments
+  { path: '', redirectTo: '/shipments', pathMatch: 'full' }
 ];
 
 @NgModule({

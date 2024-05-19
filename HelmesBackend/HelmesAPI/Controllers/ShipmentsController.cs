@@ -4,6 +4,7 @@ using HelmesAPI.Models;
 using HelmesAPI.Protocol;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using Microsoft.IdentityModel.Tokens;
 
 namespace HelmesAPI.Controllers;
 
@@ -69,11 +70,16 @@ public class ShipmentsController : ControllerBase
             return NotFound();
         }
 
+        if(!shipment.Bags.Any())
+        {
+            return BadRequest("Shipment must contain atleast one barcel bag or letter bag");
+        }
+
         if(shipment.Status == Status.FINALIZED)
         {
             return BadRequest("Already finalized");
         }
-
+        
         foreach(var bag in shipment.Bags)
         {
             if(bag is BagWithParcels parcelBag && !parcelBag.ListOfParcels.Any())

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Shipment } from '../models/shipment.model';
+import { Observable, forkJoin } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
+import { Shipment, Bag, BagWithLetters, BagWithParcels } from '../models/shipment.model';
 import { config } from '../app.config.server';
 import { getApiUrl } from '../utils/config-util';
 
@@ -18,6 +19,20 @@ export class ShipmentService {
   }
 
   getShipment(id: number): Observable<Shipment> {
-    return this.http.get<Shipment>(`${this.apiUrl}/${id}`);
+    return this.http.get<Shipment>(`${this.apiUrl}/${id}`).pipe(
+      mergeMap(shipment => {
+        const bagRequests = shipment.bags.map(bag =>
+          bag.type === 'letters' 
+            ? this.http.get<BagWithLetters>(`${getApiUrl(config)}/BagWithLetters/${bag.id}`)
+            : this.http.get<BagWithParcels>(`${getApiUrl(config)}/BagWithParcels/${bag.id}`)
+        );
+        return forkJoin(bagRequests).pipe(
+          map(bags => ({
+            ...shipment,
+            bags
+          }))
+        );
+      })
+    );
   }
 }

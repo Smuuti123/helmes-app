@@ -14,6 +14,7 @@ namespace HelmesAPI.Models
         public BagWithParcels(CreateBagWithParcelsRequest request) {
             BagNumber = request.BagNumber;
             ListOfParcels = new List<Parcel>();
+            Type =  "parcel";
         }
     }
 }

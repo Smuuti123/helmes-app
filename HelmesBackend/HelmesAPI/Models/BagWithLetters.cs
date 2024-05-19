@@ -8,6 +8,7 @@ namespace HelmesAPI.Models
 
     public BagWithLetters()
     {
+      Type = "letters";
     }
 
     public BagWithLetters(CreateBagWithLettersRequest createBagWithLettersRequest)

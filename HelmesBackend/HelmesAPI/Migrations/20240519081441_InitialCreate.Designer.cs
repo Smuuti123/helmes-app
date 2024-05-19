@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HelmesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240516105411_InitialCreate")]
+    [Migration("20240519081441_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -42,6 +42,9 @@ namespace HelmesAPI.Migrations
 
                     b.Property<int?>("ShipmentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

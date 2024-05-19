@@ -35,6 +35,7 @@ namespace HelmesAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BagNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShipmentId = table.Column<int>(type: "int", nullable: true),
                     CountOfLetters = table.Column<int>(type: "int", nullable: true),

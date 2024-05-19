@@ -1,21 +1,16 @@
 <div *ngIf="shipment">
   <h2>{{ shipment.shipmentNumber }}</h2>
-  <p>Status: {{ shipment.status }}</p>
+  <p>Flight Number: {{ shipment.flightNumber }}</p>
+  <p>Flight Date: {{ formatDate(shipment.flightDate) }}</p>
 
   <div *ngFor="let bag of shipment.bags">
-    <div *ngIf="isBagWithLetters(bag)">
-      <!-- BagWithLetters -->
-      Bag Number: {{ bag.bagNumber }}, Type: {{ bag.type }}, 
-      Total Amount: {{ bag.countOfLetters }},
-      Total Price: {{ bag.price }},
-      Finalized: {{ shipment.status === 'FINALIZED' ? 'Yes' : 'No' }}
-    </div>
-    <div *ngIf="isBagWithParcels(bag)">
-      <!-- BagWithParcels -->
-      Bag Number: {{ bag.bagNumber }}, Type: {{ bag.type }}, 
-      Total Amount: {{ bag.listOfParcels.length }},
-      Total Price: {{ bag.price }},
-      Finalized: {{ shipment.status === 'FINALIZED' ? 'Yes' : 'No' }}
+    <div>
+      Bag Number: {{ bag.bagNumber }}
+      <p>{{ getBagType(bag) }}</p>
+      <p>Total amount of items: {{ getTotalAmount(bag) }}</p>
+      <p>Total price: {{ getTotalPrice(bag) }}</p>
+      <p>Debug Info: {{ bag | json }}</p>
     </div>
   </div>
+  <p>Status: {{ shipment.status === 2 ? 'Finalized' : 'Not Finalized' }}</p>
 </div>
