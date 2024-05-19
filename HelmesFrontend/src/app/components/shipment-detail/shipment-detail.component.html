@@ -1,0 +1,17 @@
+<div *ngIf="shipment" class="shipment-detail">
+  <h2 class="shipment-number">{{ shipment.shipmentNumber }}</h2>
+  <p class="flight-info">Flight Number: {{ shipment.flightNumber }}</p>
+  <p class="flight-info">Flight Date: {{ formatDate(shipment.flightDate) }}</p>
+
+  <div *ngFor="let bag of shipment.bags" class="bag-detail">
+    <div>
+      <p class="bag-number">Bag Number: {{ bag.bagNumber }}</p>
+      <p class="bag-type">{{ getBagType(bag) }}</p>
+      <p class="bag-info">Total amount of items: {{ getTotalAmount(bag) }}</p>
+      <p class="bag-info">Total price: {{ getTotalPrice(bag) }}</p>
+    </div>
+  </div>
+  <p class="status" [ngClass]="{ 'finalized': shipment.status === 2, 'not-finalized': shipment.status !== 2 }">
+    Status: {{ shipment.status === 2 ? 'Finalized' : 'Not Finalized' }}
+  </p>
+</div>

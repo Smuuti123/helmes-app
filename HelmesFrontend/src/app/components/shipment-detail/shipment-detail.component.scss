@@ -1,0 +1,68 @@
+.shipment-detail {
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shipment-number {
+    font-size: 1.5rem;
+    color: #343a40;
+    margin-bottom: 16px;
+  }
+  
+  .flight-info {
+    font-size: 1rem;
+    color: #495057;
+    margin-bottom: 8px;
+  }
+  
+  .bag-detail {
+    padding: 16px;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.3s ease;
+  
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .bag-number {
+    font-size: 1.25rem;
+    color: #343a40;
+    margin-bottom: 8px;
+  }
+  
+  .bag-type {
+    font-size: 1rem;
+    color: #495057;
+    margin-bottom: 8px;
+  }
+  
+  .bag-info {
+    font-size: 1rem;
+    color: #495057;
+    margin-bottom: 8px;
+  }
+
+  .add-bag-buttons {
+    margin-top: 20px;
+  }
+  
+  .status {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 16px;
+  
+    &.finalized {
+      color: #dc3545;
+    }
+  
+    &.not-finalized {
+      color: #28a745;
+    }
+  }
+  
