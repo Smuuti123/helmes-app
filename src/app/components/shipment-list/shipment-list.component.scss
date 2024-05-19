@@ -1,0 +1,36 @@
+.shipment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .shipment-item {
+    padding: 16px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background-color: #ffffff;
+    transition: box-shadow 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .shipment-item h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.25rem;
+    color: #343a40;
+  }
+  
+  .shipment-item a {
+    text-decoration: none;
+    color: #007bff;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  

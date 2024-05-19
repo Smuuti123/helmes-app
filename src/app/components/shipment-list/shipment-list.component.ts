@@ -16,7 +16,6 @@ export class ShipmentListComponent implements OnInit {
     this.shipmentService.getShipments().subscribe((data: Shipment[]) => {
       this.shipments = data;
     }, (error) => {
-      console.error('Error fetching shipments:', error);
     });
   }
 

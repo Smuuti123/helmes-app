@@ -1,7 +1,8 @@
-<div *ngIf="shipments.length > 0; else noShipments">
-  <div *ngFor="let shipment of shipments">
-    <h3><a [routerLink]="['/shipment', shipment.id]">{{ shipment.shipmentNumber }}</a></h3>
-    <p>Status: {{ shipment.status === 2 ? 'Finalized' : 'Not Finalized' }}</p>
+<div *ngIf="shipments.length > 0; else noShipments" class="shipment-list">
+  <div *ngFor="let shipment of shipments" class="shipment-item">
+    <h3>
+      <a [routerLink]="['/shipment', shipment.id]">{{ shipment.shipmentNumber }}</a>
+    </h3>
   </div>
 </div>
 <ng-template #noShipments>

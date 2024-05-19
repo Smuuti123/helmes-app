@@ -21,7 +21,6 @@ export class ShipmentDetailComponent implements OnInit {
     if (id) {
       this.shipmentService.getShipment(Number(id)).subscribe((data: Shipment) => {
         this.shipment = data;
-        console.log('Loaded shipment:', this.shipment);
       });
     }
   }
