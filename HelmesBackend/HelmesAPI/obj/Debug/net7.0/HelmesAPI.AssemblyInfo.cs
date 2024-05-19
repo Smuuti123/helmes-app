@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HelmesAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+faf2c16009db5bcaf3221867546f4d37e21f344c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dcb04f87094bf0b888f41d04515a3485cb52a7c8")]
 [assembly: System.Reflection.AssemblyProductAttribute("HelmesAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelmesAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

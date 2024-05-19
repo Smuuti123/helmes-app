@@ -44,5 +44,22 @@ namespace HelmesApp.Tests.Controllers
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Shipment number must be in format 'XXX-XXXXXX', where X is a letter or digit.", badRequestResult.Value);
         }
+        [Fact]
+        public async Task PostShipment_PastFlightDate_ReturnsBadRequest()
+        {
+
+            var invalidShipmentRequest = new CreateShipmentRequest
+            {
+                ShipmentNumber = "ABC-123456",
+                KnownAirport = Airport.TLL,
+                FlightNumber = "LL1234",
+                FlightDate = DateTime.Now.AddDays(-1),
+            };
+
+            var result = await _controller.CreateShipment(invalidShipmentRequest);
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Shipment/flight cannot be in the past", badRequestResult.Value);
+        }
     }
 }
