@@ -18,11 +18,11 @@ namespace HelmesAPI.Models
         
         public Parcel(CreateParcelRequest CreateParcelRequest)
         {
-            this.ParcelNumber = CreateParcelRequest.ParcelNumber;
-            this.RecipientName = CreateParcelRequest.RecipientName;
-            this.DestinationCountry = CreateParcelRequest.DestinationCountry;
-            this.Weight = CreateParcelRequest.Weight;
-            this.Price = CreateParcelRequest.Price;
+            ParcelNumber = CreateParcelRequest.ParcelNumber;
+            RecipientName = CreateParcelRequest.RecipientName;
+            DestinationCountry = CreateParcelRequest.DestinationCountry;
+            Weight = CreateParcelRequest.Weight;
+            Price = CreateParcelRequest.Price;
         }
     }
 }

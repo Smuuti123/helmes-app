@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HelmesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240519081441_InitialCreate")]
+    [Migration("20240520003723_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

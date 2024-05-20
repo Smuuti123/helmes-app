@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HelmesApp.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c049550f6b2d9cbb104e28f247ade082121099e7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b90b003aba3c03426b33baf48cec4f42e1fba18c")]
 [assembly: System.Reflection.AssemblyProductAttribute("HelmesApp.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HelmesApp.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
