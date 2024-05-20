@@ -6,9 +6,9 @@ namespace HelmesAPI.Models
     public class Shipment
     {
         public int Id { get; set;}
-        public required string ShipmentNumber { get; set; } //Format “XXX-XXXXXX”, where X – letter or digit. Must be unique within entire database
+        public required string ShipmentNumber { get; set; }
         public Airport Airport { get; set; } 
-        public required string FlightNumber { get; set; } //Format “LLNNNN”, where L – letter, N – digit
+        public required string FlightNumber { get; set; }
         public DateTime FlightDate { get; set; } 
         public Status Status { get; set; }
         public List<Bag> Bags { get; set; } = new List<Bag>();

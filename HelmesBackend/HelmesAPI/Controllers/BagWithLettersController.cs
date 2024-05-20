@@ -33,12 +33,11 @@ public class BagWithLettersController : ControllerBase
         {
             return BadRequest("Either price or weight cannot be negative");
         }
-        //Weight max 3 decimals allowed after comma
         if((decimal)(Math.Round(letter.Weight * 1000) / 1000) != letter.Weight)
         {
             return BadRequest("Weight max 3 decimals allowed after comma");
         }
-        //Price max 2 decimals allowed after comma
+
         if((decimal)(Math.Round(letter.Price * 100) / 100) != letter.Price)
         {
             return BadRequest("Price max 2 decimals allowed after comma");
